@@ -22,21 +22,21 @@ pip install -e ".[embeddings]"
 
 ## Console (multi-user UI)
 
-Membrane does **not** own identity. Start the shared [Auth](../Auth/README.md) service, then the Membrane API + Vite console:
+Membrane does **not** own identity. Start the shared [OpenDesk](../OpenDesk/README.md) Auth service, then the Membrane API + Vite console:
 
 ```bash
-# Terminal 1 — Auth (:8090)
-cd ../Auth && pip install -e ".[dev]" && AUTH_DATABASE_URL=sqlite+pysqlite:////tmp/pisigma_auth.db pisigma-auth
+# Terminal 1 — OpenDesk Auth (:8090)
+cd ../OpenDesk && pip install -e ".[dev]" && AUTH_DATABASE_URL=sqlite+pysqlite:////tmp/opendesk_auth.db opendesk-auth
 
 # Terminal 2 — Membrane API (:8787) + maintain loop
 ./start_all.sh
 
 # Terminal 3 — Console
 cd web && npm install && npm run dev
-# → http://localhost:5173  (Google/GitHub/email login via Auth)
+# → http://localhost:5173  (Google/GitHub/email login via OpenDesk)
 ```
 
-Env: `MEMBRANE_AUTH_JWKS_URL`, `MEMBRANE_AUTH_ISSUER`, OAuth client IDs on Auth (see Auth README).
+Env: `MEMBRANE_AUTH_JWKS_URL`, `MEMBRANE_AUTH_ISSUER`, OAuth client IDs on OpenDesk (see OpenDesk README; env prefix remains `AUTH_*`).
 
 Full walkthrough: [`USAGE.md`](USAGE.md).
 

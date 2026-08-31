@@ -20,7 +20,7 @@ def create_app() -> FastAPI:
     app = FastAPI(
         title="Membrane API",
         version=__version__,
-        description="Membrane Memory OS HTTP API (Auth JWT / API keys).",
+        description="Membrane Memory OS HTTP API (OpenDesk Auth JWT / API keys).",
     )
     app.add_middleware(
         CORSMiddleware,

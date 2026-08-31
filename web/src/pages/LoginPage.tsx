@@ -36,7 +36,7 @@ export default function LoginPage() {
     <div className="login-wrap">
       <div className="login-card">
         <h1>Membrane</h1>
-        <p className="muted">Agent memory console — sign in via PiSigma Auth.</p>
+        <p className="muted">Agent memory console — sign in via OpenDesk Auth.</p>
         <div className="oauth-row">
           <a className="btn secondary" href={`${AUTH}/v1/oauth/google/start`}>
             Google
@@ -66,7 +66,7 @@ export default function LoginPage() {
           {error && <p className="error">{error}</p>}
         </form>
         <p className="muted" style={{ marginTop: "1.25rem", fontSize: "0.85rem" }}>
-          Auth is a shared microservice. <Link to="/">Membrane</Link> validates JWTs via JWKS.
+          OpenDesk Auth is a shared microservice. <Link to="/">Membrane</Link> validates JWTs via JWKS.
         </p>
       </div>
     </div>

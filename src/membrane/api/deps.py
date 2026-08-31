@@ -1,4 +1,4 @@
-"""Auth dependency — verify Bearer JWT via Auth JWKS (or local API keys)."""
+"""Auth dependency — verify Bearer JWT via OpenDesk Auth JWKS (or local API keys)."""
 
 from __future__ import annotations
 

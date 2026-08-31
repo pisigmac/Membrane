@@ -1,4 +1,4 @@
-"""Membrane API tests (API key auth + JWT via Auth JWKS)."""
+"""Membrane API tests (API key auth + JWT via OpenDesk Auth JWKS)."""
 
 from __future__ import annotations
 
@@ -125,17 +125,17 @@ def test_ingest_fixture(client: TestClient):
 
 
 def test_jwt_via_auth_jwks(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
-    """Spin Auth on a free port; Membrane validates real JWTs."""
+    """Spin OpenDesk Auth on a free port; Membrane validates real JWTs."""
     auth_db = tmp_path / "auth.db"
     monkeypatch.setenv("AUTH_DATABASE_URL", f"sqlite+pysqlite:///{auth_db}")
     monkeypatch.setenv("AUTH_ISSUER", "https://auth.test.local")
     monkeypatch.setenv("AUTH_DEFAULT_AUDIENCES", "membrane")
     monkeypatch.setenv("AUTH_HOST", "127.0.0.1")
 
-    from pisigma_auth.config import get_settings as auth_settings
-    from pisigma_auth.crypto import _ensure_keys
-    from pisigma_auth.db import init_db, reset_engine
-    from pisigma_auth.app import create_app as create_auth_app
+    from opendesk_auth.config import get_settings as auth_settings
+    from opendesk_auth.crypto import _ensure_keys
+    from opendesk_auth.db import init_db, reset_engine
+    from opendesk_auth.app import create_app as create_auth_app
 
     auth_settings.cache_clear()
     _ensure_keys.cache_clear()

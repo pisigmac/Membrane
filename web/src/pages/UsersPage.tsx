@@ -41,7 +41,7 @@ export default function UsersPage() {
   return (
     <div>
       <h1 className="page-title">Users</h1>
-      <p className="page-sub">Platform admin — manage product grants via Auth service.</p>
+      <p className="page-sub">Platform admin — manage product grants via OpenDesk Auth.</p>
       {err && <p className="error">{err}</p>}
       <div className="panel" style={{ marginBottom: "1rem" }}>
         <table className="table">

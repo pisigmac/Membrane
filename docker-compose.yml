@@ -9,7 +9,7 @@ services:
       - "5433:5432"
 
   auth:
-    build: ../Auth
+    build: ../OpenDesk
     ports:
       - "8090:8090"
     environment:
@@ -18,7 +18,7 @@ services:
       AUTH_PORT: 8090
       AUTH_CORS_ORIGINS: http://localhost:5173,http://127.0.0.1:5173,http://localhost:8787
       AUTH_SPA_CALLBACK_URL: http://localhost:5173/auth/callback
-      # Membrane deployment sets this; Auth source stays product-agnostic
+      # Membrane deployment sets this; OpenDesk Auth stays product-agnostic
       AUTH_DEFAULT_AUDIENCES: membrane
       AUTH_GOOGLE_CLIENT_ID: ${AUTH_GOOGLE_CLIENT_ID:-}
       AUTH_GOOGLE_CLIENT_SECRET: ${AUTH_GOOGLE_CLIENT_SECRET:-}
