@@ -1,0 +1,14 @@
+# Membrane Memory OS — example cron entries
+# Replace MEMBRANE_ROOT and ensure `membrane` is on PATH.
+
+SHELL=/bin/bash
+PATH=/usr/local/bin:/usr/bin:/bin
+
+# Daily eviction
+15 2 * * * MEMBRANE_ROOT=/var/lib/membrane membrane maintain --mode daily >> /var/log/membrane-daily.log 2>&1
+
+# Weekly consolidation + dedup (Sunday 03:15)
+15 3 * * 0 MEMBRANE_ROOT=/var/lib/membrane membrane maintain --mode weekly >> /var/log/membrane-weekly.log 2>&1
+
+# Monthly compaction + checksum verify (1st of month 04:15)
+15 4 1 * * MEMBRANE_ROOT=/var/lib/membrane membrane maintain --mode monthly >> /var/log/membrane-monthly.log 2>&1

@@ -1,0 +1,39 @@
+construction:
+  batch_size: 10
+  max_gpu_utilization: 0.30
+  background_only: true
+  max_chunk_tokens: 4000
+  safety_score_threshold: 0.5
+
+retrieval:
+  context_budget_ratio: 0.20
+  max_memories_per_query: 50
+  recency_half_life_days: 14
+  fill_ratio: 0.80
+
+forgetting:
+  low_confidence_ttl_days: 7
+  medium_confidence_ttl_days: 30
+  high_confidence_ttl_days: 90
+  org_constraint_ttl_days: null
+  ephemeral_ttl_days: 30
+  unresolved_contradiction_days: 14
+
+governance:
+  contradiction_grace_period_hours: 24
+  contradiction_similarity_threshold: 0.85
+  auto_archive_unresolved_contradictions: false
+  pii_scan: basic  # basic | advanced | none
+  dedup_similarity_threshold: 0.95
+  consolidation_similarity_threshold: 0.80
+  consolidation_min_cluster_size: 5
+
+embeddings:
+  provider: stub  # stub | sentence-transformers
+  model: all-MiniLM-L6-v2
+
+llm:
+  provider: heuristic  # heuristic | openai_compat
+  base_url: null
+  model: null
+  api_key_env: MEMBRANE_LLM_API_KEY

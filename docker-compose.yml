@@ -1,0 +1,51 @@
+services:
+  auth-db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: auth
+      POSTGRES_PASSWORD: auth
+      POSTGRES_DB: auth
+    ports:
+      - "5433:5432"
+
+  auth:
+    build: ../Auth
+    ports:
+      - "8090:8090"
+    environment:
+      AUTH_DATABASE_URL: postgresql+psycopg://auth:auth@auth-db:5432/auth
+      AUTH_HOST: 0.0.0.0
+      AUTH_PORT: 8090
+      AUTH_CORS_ORIGINS: http://localhost:5173,http://127.0.0.1:5173,http://localhost:8787
+      AUTH_SPA_CALLBACK_URL: http://localhost:5173/auth/callback
+      # Membrane deployment sets this; Auth source stays product-agnostic
+      AUTH_DEFAULT_AUDIENCES: membrane
+      AUTH_GOOGLE_CLIENT_ID: ${AUTH_GOOGLE_CLIENT_ID:-}
+      AUTH_GOOGLE_CLIENT_SECRET: ${AUTH_GOOGLE_CLIENT_SECRET:-}
+      AUTH_GITHUB_CLIENT_ID: ${AUTH_GITHUB_CLIENT_ID:-}
+      AUTH_GITHUB_CLIENT_SECRET: ${AUTH_GITHUB_CLIENT_SECRET:-}
+    depends_on:
+      - auth-db
+
+  membrane:
+    image: python:3.12-slim
+    working_dir: /app
+    volumes:
+      - ./:/app
+      - membrane_data:/data
+    command: >
+      bash -lc "pip install -e '.[api]' -q &&
+      membrane init --root /data &&
+      membrane serve --host 0.0.0.0 --port 8787 --root /data"
+    ports:
+      - "8787:8787"
+    environment:
+      MEMBRANE_ROOT: /data
+      MEMBRANE_AUTH_JWKS_URL: http://auth:8090/.well-known/jwks.json
+      MEMBRANE_AUTH_ISSUER: https://auth.pisigma.local
+      MEMBRANE_CORS_ORIGINS: http://localhost:5173,http://127.0.0.1:5173
+    depends_on:
+      - auth
+
+volumes:
+  membrane_data:
