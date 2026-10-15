@@ -22,21 +22,35 @@ pip install -e ".[embeddings]"
 
 ## Console (multi-user UI)
 
-Membrane does **not** own identity. Start the shared [OpenDesk](../OpenDesk/README.md) Auth service, then the Membrane API + Vite console:
+Membrane does **not** own identity. It validates JWTs against [DeskID](../DeskID/README.md) (or any external JWKS endpoint).
+
+### Run with Docker
 
 ```bash
-# Terminal 1 — OpenDesk Auth (:8090)
-cd ../OpenDesk && pip install -e ".[dev]" && AUTH_DATABASE_URL=sqlite+pysqlite:////tmp/opendesk_auth.db opendesk-auth
+# Optional: One-time setup of central DeskID identity stack (if not already running)
+./setup_deskid.sh
+
+# Run Membrane in Docker:
+docker compose up -d
+# Or point to an external / remote DeskID:
+# MEMBRANE_AUTH_JWKS_URL=https://auth.example.com/.well-known/jwks.json docker compose up -d
+```
+
+### Run Locally on Host
+
+```bash
+# Terminal 1 — DeskID (:8090)
+cd ../DeskID && pip install -e ".[dev]" && AUTH_DATABASE_URL=sqlite+pysqlite:////tmp/deskid_auth.db deskid
 
 # Terminal 2 — Membrane API (:8787) + maintain loop
 ./start_all.sh
 
 # Terminal 3 — Console
 cd web && npm install && npm run dev
-# → http://localhost:5173  (Google/GitHub/email login via OpenDesk)
+# → http://localhost:5173  (Google/GitHub/email login via DeskID)
 ```
 
-Env: `MEMBRANE_AUTH_JWKS_URL`, `MEMBRANE_AUTH_ISSUER`, OAuth client IDs on OpenDesk (see OpenDesk README; env prefix remains `AUTH_*`).
+Env: `MEMBRANE_AUTH_JWKS_URL`, `MEMBRANE_AUTH_ISSUER`, OAuth client IDs on DeskID (see DeskID README; env prefix remains `AUTH_*`).
 
 Full walkthrough: [`USAGE.md`](USAGE.md).
 

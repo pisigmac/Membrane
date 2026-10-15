@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Start Membrane: init store, maintain loop, HTTP API (and hint OpenDesk Auth + Vite).
+# Start Membrane: init store, maintain loop, HTTP API (and hint DeskID + Vite).
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -57,7 +57,7 @@ fi
 echo "==> Status"
 membrane_bin status --root "$MEMBRANE_ROOT" | head -n 40
 
-AUTH_HOME="$(cd "$MEMBRANE_HOME/../OpenDesk" 2>/dev/null && pwd || true)"
+AUTH_HOME="$(cd "$MEMBRANE_HOME/../DeskID" 2>/dev/null && pwd || true)"
 
 cat <<EOF
 
@@ -69,13 +69,13 @@ Membrane is ready.
   API:              http://${MEMBRANE_API_HOST:-127.0.0.1}:${MEMBRANE_API_PORT:-8787}/api/health
   Stop services:    ./stop_all.sh
 
-OpenDesk Auth (shared microservice) — start separately:
-  cd ${AUTH_HOME:-../OpenDesk} && PYTHONPATH=src python3 -m opendesk_auth.cli
-  # or: opendesk-auth / docker compose up -d
+DeskID (shared microservice) — start separately:
+  cd ${AUTH_HOME:-../DeskID} && PYTHONPATH=src python3 -m deskid.cli
+  # or: deskid / docker compose up -d
 
 Console (Vite):
   cd web && npm install && npm run dev
-  → http://localhost:5173  (proxies /api → Membrane, /auth-api → OpenDesk)
+  → http://localhost:5173  (proxies /api → Membrane, /auth-api → DeskID)
 
 See USAGE.md for multi-user hosting and OAuth setup.
 EOF

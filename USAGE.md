@@ -6,7 +6,7 @@ Step-by-step guide for running Membrane Memory OS, the HTTP console, and wiring 
 
 - Python 3.10+
 - Node 20+ (console)
-- Sibling [OpenDesk](../OpenDesk/) Auth service for multi-user login
+- Sibling [DeskID](../DeskID/) authentication service for multi-user login
 
 ```bash
 pip install -e ".[dev,api]"
@@ -17,15 +17,20 @@ pip install -e ".[embeddings]"
 ## 2. Start / stop
 
 ```bash
-# OpenDesk Auth (required for console JWT login)
-cd ../OpenDesk && AUTH_DATABASE_URL=sqlite+pysqlite:////tmp/opendesk_auth.db opendesk-auth
+# Option A: Run via Docker (standalone Membrane container)
+docker compose up -d
+# To stop: docker compose down
 
-# Membrane store + maintain loop + API
+# Option B: Run locally on host
+# Terminal 1: DeskID (required for console JWT login)
+cd ../DeskID && AUTH_DATABASE_URL=sqlite+pysqlite:////tmp/deskid_auth.db deskid
+
+# Terminal 2: Membrane store + maintain loop + API
 ./start_all.sh          # also starts membrane serve on :8787
 ./scripts/health.sh
 ./stop_all.sh           # stops loop + API (keeps data)
 
-# Vite console
+# Terminal 3: Vite console
 cd web && npm install && npm run dev   # :5173
 ```
 
@@ -39,17 +44,17 @@ What `start_all.sh` does:
 
 Logs under `$MEMBRANE_ROOT/logs/`. PIDs under `$MEMBRANE_ROOT/run/`.
 
-### OpenDesk Auth / API env
+### DeskID / API env
 
 | Variable | Purpose |
 |----------|---------|
-| `MEMBRANE_AUTH_JWKS_URL` | OpenDesk JWKS (default `http://127.0.0.1:8090/.well-known/jwks.json`) |
-| `MEMBRANE_AUTH_ISSUER` | Must match OpenDesk `AUTH_ISSUER` |
+| `MEMBRANE_AUTH_JWKS_URL` | DeskID JWKS (default `http://127.0.0.1:8090/.well-known/jwks.json`) |
+| `MEMBRANE_AUTH_ISSUER` | Must match DeskID `AUTH_ISSUER` |
 | `MEMBRANE_AUTH_AUDIENCE` | Default `membrane` |
 | `MEMBRANE_CORS_ORIGINS` | SPA origins |
-| `AUTH_*` | See OpenDesk `.env.example` (Google/GitHub OAuth; prefix is still `AUTH_`) |
+| `AUTH_*` | See DeskID `.env.example` (Google/GitHub OAuth; prefix is still `AUTH_`) |
 
-Machine agents may use `X-API-Key` with keys in `$MEMBRANE_ROOT/auth/api_keys.json` (prefer OpenDesk JWTs long-term).
+Machine agents may use `X-API-Key` with keys in `$MEMBRANE_ROOT/auth/api_keys.json` (prefer DeskID JWTs long-term).
 
 Demo-speed schedule (optional):
 
