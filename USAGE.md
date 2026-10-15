@@ -6,7 +6,7 @@ Step-by-step guide for running Membrane Memory OS, the HTTP console, and wiring 
 
 - Python 3.10+
 - Node 20+ (console)
-- Sibling [DeskID](../DeskID/) authentication service for multi-user login
+- External or local [DeskID](https://github.com/pisigmac/DeskId) identity service for multi-user login
 
 ```bash
 pip install -e ".[dev,api]"
@@ -22,8 +22,8 @@ docker compose up -d
 # To stop: docker compose down
 
 # Option B: Run locally on host
-# Terminal 1: DeskID (required for console JWT login)
-cd ../DeskID && AUTH_DATABASE_URL=sqlite+pysqlite:////tmp/deskid_auth.db deskid
+# Terminal 1: DeskID (run in DeskID repo/container to provide auth at :8090)
+deskid
 
 # Terminal 2: Membrane store + maintain loop + API
 ./start_all.sh          # also starts membrane serve on :8787

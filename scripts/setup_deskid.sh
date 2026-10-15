@@ -14,7 +14,6 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 MEMBRANE_HOME="$(cd "$SCRIPT_DIR/.." && pwd)"
-PARENT_DIR="$(cd "$MEMBRANE_HOME/.." && pwd)"
 
 GREEN='\033[0;32m'
 BLUE='\033[0;34m'
@@ -25,7 +24,7 @@ BOLD='\033[1m'
 NC='\033[0m'
 
 DESKID_REPO_URL="${DESKID_REPO_URL:-https://github.com/pisigmac/DeskId.git}"
-DESKID_TARGET_DIR="${DESKID_DIR:-$PARENT_DIR/DeskID}"
+DESKID_TARGET_DIR="${DESKID_DIR:-./deskid}"
 
 echo -e "${BLUE}${BOLD}=== DeskID: Central Identity Engine Setup ===${NC}\n"
 

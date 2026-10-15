@@ -22,7 +22,7 @@ pip install -e ".[embeddings]"
 
 ## Console (multi-user UI)
 
-Membrane does **not** own identity. It validates JWTs against [DeskID](../DeskID/README.md) (or any external JWKS endpoint).
+Membrane does **not** own identity. It validates JWTs against [DeskID](https://github.com/pisigmac/DeskId) (or any external JWKS endpoint).
 
 ### Run with Docker
 
@@ -39,8 +39,8 @@ docker compose up -d
 ### Run Locally on Host
 
 ```bash
-# Terminal 1 — DeskID (:8090)
-cd ../DeskID && pip install -e ".[dev]" && AUTH_DATABASE_URL=sqlite+pysqlite:////tmp/deskid_auth.db deskid
+# Terminal 1 — DeskID (:8090) (run in your DeskID repository or container)
+deskid
 
 # Terminal 2 — Membrane API (:8787) + maintain loop
 ./start_all.sh

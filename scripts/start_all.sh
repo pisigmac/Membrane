@@ -45,19 +45,25 @@ if [[ "${MEMBRANE_START_API:-1}" == "1" ]]; then
     echo "==> Starting Membrane API (membrane serve)…"
     export MEMBRANE_ROOT
     export MEMBRANE_AUTH_JWKS_URL="${MEMBRANE_AUTH_JWKS_URL:-http://127.0.0.1:8090/.well-known/jwks.json}"
-    export MEMBRANE_AUTH_ISSUER="${MEMBRANE_AUTH_ISSUER:-https://auth.pisigma.local}"
-    nohup membrane_bin serve --host "${MEMBRANE_API_HOST:-127.0.0.1}" --port "${MEMBRANE_API_PORT:-8787}" \
-      --root "$MEMBRANE_ROOT" \
-      >>"$MEMBRANE_LOG_DIR/api.log" 2>&1 &
+    export MEMBRANE_AUTH_ISSUER="${MEMBRANE_AUTH_ISSUER:-http://127.0.0.1:8090}"
+    MEMBRANE_BIN="$(command -v membrane 2>/dev/null || true)"
+    if [ -n "$MEMBRANE_BIN" ]; then
+      nohup "$MEMBRANE_BIN" serve --host "${MEMBRANE_API_HOST:-127.0.0.1}" --port "${MEMBRANE_API_PORT:-8787}" \
+        --root "$MEMBRANE_ROOT" \
+        </dev/null >>"$MEMBRANE_LOG_DIR/api.log" 2>&1 &
+    else
+      nohup python3 -m membrane serve --host "${MEMBRANE_API_HOST:-127.0.0.1}" --port "${MEMBRANE_API_PORT:-8787}" \
+        --root "$MEMBRANE_ROOT" \
+        </dev/null >>"$MEMBRANE_LOG_DIR/api.log" 2>&1 &
+    fi
     echo $! >"$API_PID_FILE"
+    disown "$!"
     echo "    pid $(cat "$API_PID_FILE")  http://${MEMBRANE_API_HOST:-127.0.0.1}:${MEMBRANE_API_PORT:-8787}"
   fi
 fi
 
 echo "==> Status"
 membrane_bin status --root "$MEMBRANE_ROOT" | head -n 40
-
-AUTH_HOME="$(cd "$MEMBRANE_HOME/../DeskID" 2>/dev/null && pwd || true)"
 
 cat <<EOF
 
@@ -69,9 +75,9 @@ Membrane is ready.
   API:              http://${MEMBRANE_API_HOST:-127.0.0.1}:${MEMBRANE_API_PORT:-8787}/api/health
   Stop services:    ./stop_all.sh
 
-DeskID (shared microservice) — start separately:
-  cd ${AUTH_HOME:-../DeskID} && PYTHONPATH=src python3 -m deskid.cli
-  # or: deskid / docker compose up -d
+DeskID (shared identity service):
+  Ensure DeskID is running on http://127.0.0.1:8090
+  # Start DeskID: deskid / docker compose up -d (in your DeskID project)
 
 Console (Vite):
   cd web && npm install && npm run dev
